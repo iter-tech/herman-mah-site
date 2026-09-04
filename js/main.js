@@ -121,35 +121,22 @@
     Array.prototype.forEach.call(revealables, function (el) { ro.observe(el); });
   }
 
-  /* -------------------------------------------------------------- countdown */
-  var row = document.getElementById('countRow');
+  /* ------------------------------------------------------ days until voting */
+  var away = document.getElementById('kdAway');
 
-  if (row) {
+  if (away) {
     // General voting day: Saturday, October 17, 2026, polls open at 8:00 (PDT).
-    var electionDay = new Date('2026-10-17T08:00:00-07:00').getTime();
-    var cells = {
-      days: row.querySelector('[data-unit="days"]'),
-      hours: row.querySelector('[data-unit="hours"]'),
-      mins: row.querySelector('[data-unit="mins"]')
-    };
+    var electionDay = new Date('2026-10-17T08:00:00-07:00');
+    var oneDay = 86400000;
+    var days = Math.ceil((electionDay - Date.now()) / oneDay);
 
-    function tick() {
-      var left = electionDay - Date.now();
-
-      if (left <= 0) {
-        row.innerHTML = '<p class="count-done">Voting day is here.</p>';
-        clearInterval(timer);
-        return;
-      }
-
-      var mins = Math.floor(left / 60000);
-      cells.days.textContent = Math.floor(mins / 1440);
-      cells.hours.textContent = Math.floor(mins / 60) % 24;
-      cells.mins.textContent = mins % 60;
+    if (days > 1) {
+      away.textContent = days + ' days away';
+    } else if (days === 1) {
+      away.textContent = 'Tomorrow';
+    } else if (days === 0) {
+      away.textContent = 'Today';
     }
-
-    tick();
-    var timer = setInterval(tick, 30000);
   }
 
   /* ----------------------------------------------------- counting the stats */
